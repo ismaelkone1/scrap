@@ -1,6 +1,9 @@
 import time
 import csv
+import os
+import unicodedata
 import undetected_chromedriver as uc
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,13 +11,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 def scraper_google_undetected(requete, region="Belgique", start_page=25, pages=10, pause=4):
-
     query = f"{requete} {region}"
 
-    # --- OPTIONS CHROMIUM LINUX ---
     options = uc.ChromeOptions()
-
-    # IMPORTANT SOUS LINUX / CHROMIUM
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
@@ -23,19 +22,16 @@ def scraper_google_undetected(requete, region="Belgique", start_page=25, pages=1
     options.add_argument("--incognito")
     options.add_argument("--start-maximized")
 
-    # 👉 CHANGE ICI AVEC LE CHEMIN RETOURNÉ PAR "which chromium"
-    CHROMIUM_PATH = "/snap/bin/chromium"     # ← METS TON CHEMIN ICI
+    CHROMIUM_PATH = "/snap/bin/chromium"
 
     driver = uc.Chrome(
         options=options,
         browser_executable_path=CHROMIUM_PATH
     )
 
-    # --- SCRAPING GOOGLE ---
     driver.get("https://www.google.com")
     time.sleep(2)
 
-    # Accepter les cookies
     try:
         boutons = [
             "//button[contains(., 'Accepter')]",
@@ -53,7 +49,6 @@ def scraper_google_undetected(requete, region="Belgique", start_page=25, pages=1
     except:
         pass
 
-    # Requête
     search_box = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.NAME, "q"))
     )
@@ -61,7 +56,6 @@ def scraper_google_undetected(requete, region="Belgique", start_page=25, pages=1
     search_box.send_keys(Keys.RETURN)
     time.sleep(pause)
 
-    # Aller à la page de départ
     for _ in range(start_page - 1):
         try:
             driver.find_element(By.ID, "pnnext").click()
@@ -71,16 +65,12 @@ def scraper_google_undetected(requete, region="Belgique", start_page=25, pages=1
 
     urls = []
 
-    # Scraping des pages suivantes
     for _ in range(pages):
-
-        # sélection de liens organiques
         selectors = [
-            "a[jsname]",
             "div.yuRUbf > a",
+            "a[jsname]",
             "a[href][data-ved]"
         ]
-
         for sel in selectors:
             elements = driver.find_elements(By.CSS_SELECTOR, sel)
             for e in elements:
@@ -88,7 +78,6 @@ def scraper_google_undetected(requete, region="Belgique", start_page=25, pages=1
                 if href and "http" in href and href not in urls:
                     urls.append(href)
 
-        # Page suivante
         try:
             driver.find_element(By.ID, "pnnext").click()
         except:
@@ -100,23 +89,73 @@ def scraper_google_undetected(requete, region="Belgique", start_page=25, pages=1
     return urls
 
 
-# ----------------------------------------------------------
-#  APPEL DE LA FONCTION + EXPORT CSV
-# ----------------------------------------------------------
+def slugify(value):
+    value = str(value)
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode("ascii")
+    value = value.lower()
+    value = value.replace("'", "")
+    for sep in [" ", "/", "\\", ",", ";", "|"]:
+        value = value.replace(sep, "_")
+    while "__" in value:
+        value = value.replace("__", "_")
+    return value.strip("_")
 
-urls = scraper_google_undetected(
-    requete="electricien",
-    region="Wallonie",
-    start_page=25,
-    pages=10,
-    pause=3
-)
 
-# Export CSV
-with open("resultats_google_electricien.csv", "w", newline="", encoding="utf-8") as f:
-    writer = csv.writer(f)
-    writer.writerow(["url"])
-    for u in urls:
-        writer.writerow([u])
+def lancer_batch(fichier_arguments="arguments-recherche.txt", dossier_sortie="resultats"):
+    # paramètres fixes pour toutes les recherches
+    START_PAGE = 20
+    PAGES = 20
+    PAUSE = 6
 
-print("Terminé :", len(urls), "URLs enregistrées dans resultats_google.csv")
+    if not os.path.exists(fichier_arguments):
+        print(f"Fichier {fichier_arguments} introuvable.")
+        return
+
+    if not os.path.exists(dossier_sortie):
+        os.makedirs(dossier_sortie)
+
+    with open(fichier_arguments, "r", encoding="utf-8") as f:
+        lignes = f.readlines()
+
+    for idx, ligne in enumerate(lignes, start=1):
+        ligne = ligne.strip()
+        if not ligne or ligne.startswith("#"):
+            continue
+
+        try:
+            # Format simple : requete | region
+            parts = [p.strip() for p in ligne.split("|")]
+            if len(parts) < 2:
+                print(f"Ligne {idx} ignorée (pas assez de champs) : {ligne}")
+                continue
+
+            requete, region = parts[0], parts[1]
+
+            print(f"\n[Ligne {idx}] Requête='{requete}' | Région='{region}' | start_page={START_PAGE} | pages={PAGES} | pause={PAUSE}")
+
+            urls = scraper_google_undetected(
+                requete=requete,
+                region=region,
+                start_page=START_PAGE,
+                pages=PAGES,
+                pause=PAUSE
+            )
+
+            nom_base = f"{slugify(requete)}_{slugify(region)}"
+            csv_path = os.path.join(dossier_sortie, f"resultats_{nom_base}.csv")
+
+            with open(csv_path, "w", newline="", encoding="utf-8") as fcsv:
+                writer = csv.writer(fcsv)
+                writer.writerow(["url"])
+                for u in urls:
+                    writer.writerow([u])
+
+            print(f" → {len(urls)} URLs enregistrées dans {csv_path}")
+
+        except Exception as e:
+            print(f"Erreur sur la ligne {idx} : {ligne}")
+            print(e)
+
+
+if __name__ == "__main__":
+    lancer_batch()
