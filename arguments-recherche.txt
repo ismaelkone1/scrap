@@ -1,0 +1,107 @@
+# Secteur | Région
+# Format = requete | region
+
+########################################################
+# ENTREPRISE DE NETTOYAGE
+########################################################
+entreprise de nettoyage | Belgique
+entreprise de nettoyage | Wallonie
+entreprise de nettoyage | Flandre
+entreprise de nettoyage | Bruxelles
+entreprise de nettoyage | Hainaut
+entreprise de nettoyage | Liège
+entreprise de nettoyage | Namur
+entreprise de nettoyage | Brabant Wallon
+entreprise de nettoyage | Brabant Flamand
+entreprise de nettoyage | Flandre Occidentale
+entreprise de nettoyage | Flandre Orientale
+
+########################################################
+# PLOMBIER CHAUFFAGISTE
+########################################################
+plombier chauffagiste | Belgique
+plombier chauffagiste | Wallonie
+plombier chauffagiste | Flandre
+plombier chauffagiste | Bruxelles
+plombier chauffagiste | Hainaut
+plombier chauffagiste | Liège
+plombier chauffagiste | Namur
+plombier chauffagiste | Brabant Wallon
+plombier chauffagiste | Brabant Flamand
+plombier chauffagiste | Flandre Occidentale
+plombier chauffagiste | Flandre Orientale
+
+########################################################
+# ELECTRICIEN
+########################################################
+électricien | Belgique
+électricien | Wallonie
+électricien | Flandre
+électricien | Bruxelles
+électricien | Hainaut
+électricien | Liège
+électricien | Namur
+électricien | Brabant Wallon
+électricien | Brabant Flamand
+électricien | Flandre Occidentale
+électricien | Flandre Orientale
+
+########################################################
+# AGENCE DE TRADUCTION
+########################################################
+agence de traduction | Belgique
+agence de traduction | Wallonie
+agence de traduction | Flandre
+agence de traduction | Bruxelles
+agence de traduction | Hainaut
+agence de traduction | Liège
+agence de traduction | Namur
+agence de traduction | Brabant Wallon
+agence de traduction | Brabant Flamand
+agence de traduction | Flandre Occidentale
+agence de traduction | Flandre Orientale
+
+########################################################
+# SOCIÉTÉ DE GARDIENNAGE
+########################################################
+société de gardiennage | Belgique
+société de gardiennage | Wallonie
+société de gardiennage | Flandre
+société de gardiennage | Bruxelles
+société de gardiennage | Hainaut
+société de gardiennage | Liège
+société de gardiennage | Namur
+société de gardiennage | Brabant Wallon
+société de gardiennage | Brabant Flamand
+société de gardiennage | Flandre Occidentale
+société de gardiennage | Flandre Orientale
+
+########################################################
+# MENUISIER
+########################################################
+menuisier | Belgique
+menuisier | Wallonie
+menuisier | Flandre
+menuisier | Bruxelles
+menuisier | Hainaut
+menuisier | Liège
+menuisier | Namur
+menuisier | Brabant Wallon
+menuisier | Brabant Flamand
+menuisier | Flandre Occidentale
+menuisier | Flandre Orientale
+
+########################################################
+# ENTREPRISE DE JARDINAGE
+########################################################
+entreprise de jardinage | Belgique
+entreprise de jardinage | Wallonie
+entreprise de jardinage | Flandre
+entreprise de jardinage | Bruxelles
+entreprise de jardinage | Hainaut
+entreprise de jardinage | Liège
+entreprise de jardinage | Namur
+entreprise de jardinage | Brabant Wallon
+entreprise de jardinage | Brabant Flamand
+entreprise de jardinage | Flandre Occidentale
+entreprise de jardinage | Flandre Orientale
